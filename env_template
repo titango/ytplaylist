@@ -1,0 +1,3 @@
+DOWNLOAD_DIR=/Users/name
+YOUTUBE_PLAYLIST=https://www.youtube.com/playlist?list=
+FFMPEG_PATH=/usr/local/bin/ffmpeg
