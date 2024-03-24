@@ -1,0 +1,5 @@
+{
+  "DOWNLOAD_DIR": "/Users/xxxx/Music",
+  "YOUTUBE_PLAYLIST": "https://www.youtube.com/playlist?list=xxxxxx",
+  "FFMPEG_PATH": "/usr/local/bin/ffmpeg"
+}
