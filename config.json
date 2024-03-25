@@ -1,6 +1,5 @@
 {
   "DOWNLOAD_DIR": "/Users/tanthinh/Music/Tan",
   "YOUTUBE_PLAYLIST": "https://www.youtube.com/playlist?list=PLj57b_Nb__i2OAxpIiCjMmFOP1xSJDrFJ",
-  "FFMPEG_PATH": "/usr/local/bin/ffmpeg",
-  "logging": false
+  "FFMPEG_PATH": "/usr/local/bin/ffmpeg"
 }
