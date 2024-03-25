@@ -8,8 +8,7 @@ Python script to download a YouTube playlist and convert it to MP3.
 1. Clone the repository to your local machine.
 2. Navigate to the cloned repository's directory.
 3. Run `setup.sh` to set up the Python environment and install the necessary dependencies.
-4. Copy `config_example.json` to a new file named `config.json`.
-5. Edit the `config.json` file to specify your `DOWNLOAD_DIR`, `YOUTUBE_PLAYLIST`, and `FFMPEG_PATH` according to your system setup.
+4. Edit the `config.json` file to specify your `DOWNLOAD_DIR`, `YOUTUBE_PLAYLIST`, and `FFMPEG_PATH` according to your system setup.
 
 # Usage
 Run `python main.py` after configuring the `config` file
