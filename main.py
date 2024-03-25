@@ -7,6 +7,7 @@ from tqdm import tqdm
 from datetime import datetime
 
 # Create a log directory if it doesn't exist
+is_logging = True
 log_dir = './log'
 if not os.path.exists(log_dir):
     os.makedirs(log_dir)
@@ -18,21 +19,33 @@ log_file_path = os.path.join(log_dir, log_file_name)
 # Function to log messages both to console and log file
 def log_message(message):
     print(message)
-    with open(log_file_path, 'a') as log_file:
-        log_file.write(message + '\n')
+    if is_logging:
+        with open(log_file_path, 'a') as log_file:
+            log_file.write(message + '\n')
 
 def on_progress(stream, chunk, bytes_remaining):
     progress_bar = tqdm(total=stream.filesize, unit='B', unit_scale=True, unit_divisor=1024, ncols=80)
     bytes_received = stream.filesize - bytes_remaining
     progress_bar.update(bytes_received)
+    
+def check_duplicate_name(file_name, download_dir):
+    file_name_without_extension = os.path.splitext(file_name)[0]
+    for existing_file_name in os.listdir(download_dir):
+        existing_file_name_without_extension = os.path.splitext(existing_file_name)[0]
+        if file_name_without_extension in existing_file_name_without_extension:
+            log_message(f'File {file_name} already exists, skipping.')
+            return True
+    return False
 
 def download_video(url, download_dir):
     try:
         yt = YouTube(url, on_progress_callback=on_progress)
-        stream = yt.streams.filter(only_audio=True)
+        stream = yt.streams.filter(only_audio=True).first()
+        if check_duplicate_name(stream.default_filename, download_dir):
+            return None
         log_message(f'Downloading video: {url}')
         log_message(f'Title: {yt.title}')
-        output_file = stream.first().download(output_path=download_dir)
+        output_file = stream.download(output_path=download_dir)
         log_message(f'Downloaded successfully.')
         return output_file
     except VideoUnavailable:
@@ -62,9 +75,11 @@ def load_config():
         return json.load(config_file)
 
 def main():
+    global is_logging
     config = load_config()
     download_dir = config['DOWNLOAD_DIR']
     youtube_playlist = config['YOUTUBE_PLAYLIST']
+    is_logging = config.get('logging', True)
     ffmpeg_path = config.get('FFMPEG_PATH', '/usr/bin/ffmpeg')  # Default path if not specified
 
     playlist = Playlist(youtube_playlist)
