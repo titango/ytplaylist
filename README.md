@@ -6,11 +6,11 @@ This is a simple Python script to download a YouTube playlist and convert it to 
 1. Clone the repository to your local machine.
 2. Navigate to the cloned repository's directory.
 3. Run `setup.sh` to set up the Python environment and install the necessary dependencies.
-4. Copy `env_template` to a new file named `.env`.
-5. Edit the `.env` file to specify your `DOWNLOAD_DIR`, `YOUTUBE_PLAYLIST`, and `FFMPEG_PATH` according to your system setup.
+4. Copy `config_example.json` to a new file named `config.json`.
+5. Edit the `config.json` file to specify your `DOWNLOAD_DIR`, `YOUTUBE_PLAYLIST`, and `FFMPEG_PATH` according to your system setup.
 
 # Usage
-Run `python main.py` after configuring the `.env` file
+Run `python main.py` after configuring the `config` file
 
 # Configuration
 
@@ -27,9 +27,7 @@ Run `python main.py` after configuring the `.env` file
 # Requirements
 
 - Python 3.6 or higher
-- `pytube` for downloading videos from YouTube.
 - `ffmpeg` for converting videos to MP3 format.
-- `dotenv` for loading environment variables from the `.env` file.
 
 # Contributing
 
