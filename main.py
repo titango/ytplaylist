@@ -39,7 +39,7 @@ def on_progress(stream, _chunk, bytes_remaining):
     chunk (bytes): The chunk of data that was just downloaded.
     bytes_remaining (int): The number of bytes still to be downloaded.
     """
-    progress_bar = tqdm(total=stream.filesize, unit='B', unit_scale=True, 
+    progress_bar = tqdm(total=stream.filesize, unit='B', unit_scale=True,
                         unit_divisor=1024, ncols=80)
     bytes_received = stream.filesize - bytes_remaining
     progress_bar.update(bytes_received)
