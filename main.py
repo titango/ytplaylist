@@ -1,10 +1,12 @@
-import os
+"""Main file"""
+
+import os  # noqa: D100
 import subprocess
 import json
+from datetime import datetime
 from pytube import Playlist, YouTube
 from pytube.exceptions import VideoUnavailable
 from tqdm import tqdm
-from datetime import datetime
 
 # Create a log directory if it doesn't exist
 IS_LOGGING = True
@@ -28,7 +30,7 @@ def log_message(message):
         with open(LOG_FILE_PATH, 'a', encoding='utf-8') as log_file:
             log_file.write(message + '\n')
 
-def on_progress(stream, chunk, bytes_remaining):
+def on_progress(stream, _chunk, bytes_remaining):
     """
     Updates the progress bar during a download operation.
 
@@ -37,10 +39,11 @@ def on_progress(stream, chunk, bytes_remaining):
     chunk (bytes): The chunk of data that was just downloaded.
     bytes_remaining (int): The number of bytes still to be downloaded.
     """
-    progress_bar = tqdm(total=stream.filesize, unit='B', unit_scale=True, unit_divisor=1024, ncols=80)
+    progress_bar = tqdm(total=stream.filesize, unit='B', unit_scale=True, 
+                        unit_divisor=1024, ncols=80)
     bytes_received = stream.filesize - bytes_remaining
     progress_bar.update(bytes_received)
-    
+
 def check_duplicate_name(file_name, download_dir):
     """
     Checks if a file with the same name already exists in the download directory.
@@ -101,7 +104,7 @@ def convert_to_mp3(input_file, download_dir, ffmpeg_path):
     mp3_file = base + '.mp3'
     log_message('Converting to MP3 file.....')
     downloaded_audio_file = os.path.join(download_dir, os.path.basename(input_file.strip()))
-    
+
     ffmpeg_command = [
       ffmpeg_path,
       "-y",  # Overwrite output file without asking
