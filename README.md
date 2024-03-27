@@ -31,6 +31,7 @@ Run `python main.py` after configuring the `config` file
 
 - Python 3.6 or higher
 - `ffmpeg` for converting videos to MP3 format.
+- Youtube playlist is set to public in order for the script to work.
 
 # Contributing
 

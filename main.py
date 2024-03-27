@@ -9,7 +9,7 @@ from pytube.exceptions import VideoUnavailable
 from tqdm import tqdm
 
 # Create a log directory if it doesn't exist
-IS_LOGGING = True
+IS_LOGGING = False
 LOG_DIR = './log'
 if not os.path.exists(LOG_DIR):
     os.makedirs(LOG_DIR)
@@ -59,7 +59,7 @@ def check_duplicate_name(file_name, download_dir):
     for existing_file_name in os.listdir(download_dir):
         existing_file_name_without_extension = os.path.splitext(existing_file_name)[0]
         if file_name_without_extension in existing_file_name_without_extension:
-            log_message(f'File {file_name} already exists, skipping.')
+            log_message(f'File {file_name} already exists, skipping.\n')
             return True
     return False
 
