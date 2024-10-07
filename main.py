@@ -4,8 +4,8 @@ import os  # noqa: D100
 import subprocess
 import json
 from datetime import datetime
-from pytube import Playlist, YouTube
-from pytube.exceptions import VideoUnavailable
+from pytubefix import YouTube, Playlist
+from pytubefix.exceptions import VideoUnavailable
 from tqdm import tqdm
 
 # Create a log directory if it doesn't exist
@@ -59,7 +59,7 @@ def check_duplicate_name(file_name, download_dir):
     for existing_file_name in os.listdir(download_dir):
         existing_file_name_without_extension = os.path.splitext(existing_file_name)[0]
         if file_name_without_extension in existing_file_name_without_extension:
-            log_message(f'File {file_name} already exists, skipping.\n')
+            log_message(f'File <<{file_name}>> already exists, skipping.\n')
             return True
     return False
 
@@ -136,7 +136,7 @@ def main():
 
     playlist = Playlist(youtube_playlist)
     for index, url in enumerate(playlist.video_urls, start=1):
-        log_message(f'Processing video {index} of {len(playlist.video_urls)}')
+        log_message(f'Processing video {index} of {len(playlist.video_urls)} ({url})')
         output_file = download_video(url, download_dir)
         if output_file:
             convert_to_mp3(output_file, download_dir, ffmpeg_path)
