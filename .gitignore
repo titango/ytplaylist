@@ -3,3 +3,4 @@ venv
 .env
 .python-version
 ./log
+node_modules

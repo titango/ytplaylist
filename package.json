@@ -1,0 +1,22 @@
+{
+  "name": "ytplayer_downloader",
+  "version": "1.1.0",
+  "description": "Support script",
+  "main": "youtube-token-generator.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/titango/ytplaylist.git"
+  },
+  "author": "Tan Ngo",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/titango/ytplaylist/issues"
+  },
+  "homepage": "https://github.com/titango/ytplaylist#readme",
+  "dependencies": {
+    "youtube-po-token-generator": "^0.3.0"
+  }
+}

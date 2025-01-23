@@ -1,12 +1,14 @@
 """Main file"""
-
+import sys
 import os  # noqa: D100
 import subprocess
 import json
+import re
 from datetime import datetime
 from pytubefix import YouTube, Playlist
 from pytubefix.exceptions import VideoUnavailable
 from tqdm import tqdm
+from typing import Tuple
 
 # Create a log directory if it doesn't exist
 IS_LOGGING = False
@@ -17,6 +19,13 @@ if not os.path.exists(LOG_DIR):
 # Generate a log file name with the current datetime
 LOG_FILE_NAME = datetime.now().strftime('log_%Y-%m-%d_%H:%M:%S') + '.txt'
 LOG_FILE_PATH = os.path.join(LOG_DIR, LOG_FILE_NAME)
+
+def sanitize_filename(filename):
+    """
+    Sanitize filename by removing or replacing characters that are not valid in file paths.
+    """
+    # Replace slashes with hyphens and remove other potentially problematic characters
+    return re.sub(r'[/\\:*?"<>|]', '-', filename)
 
 def log_message(message):
     """
@@ -75,17 +84,24 @@ def download_video(url, download_dir):
     str or None: The path to the downloaded video file, or None if the download was unsuccessful.
     """
     try:
-        yt = YouTube(url, on_progress_callback=on_progress)
+        yt = YouTube(url, on_progress_callback=on_progress, use_po_token=True,
+                 po_token_verifier=po_token_verifier)   
+        # Sanitize the filename before downloading
+        sanitized_title = sanitize_filename(yt.title)    
         stream = yt.streams.filter(only_audio=True).first()
-        if check_duplicate_name(stream.default_filename, download_dir):
+        if check_duplicate_name(sanitized_title + stream.default_filename.split('.')[-1], download_dir):
             return None
         log_message(f'Downloading video: {url}')
         log_message(f'Title: {yt.title}')
-        output_file = stream.download(output_path=download_dir)
+        output_file = stream.download(output_path=download_dir,
+                                      filename=sanitized_title + '.' + stream.default_filename.split('.')[-1]
+        )
         log_message('Downloaded successfully.')
         return output_file
     except VideoUnavailable:
         log_message(f'Video {url} is unavailable, skipping.')
+        error_type, e, error_traceback = sys.exc_info()
+        print(f'Failed with Error: {e}')
         return None
 
 def convert_to_mp3(input_file, download_dir, ffmpeg_path):
@@ -118,6 +134,7 @@ def convert_to_mp3(input_file, download_dir, ffmpeg_path):
     log_message(f'MP3 file converted to {mp3_file}\n')
 
 def load_config():
+    
     """
     Loads the configuration settings from a JSON file.
 
@@ -126,6 +143,34 @@ def load_config():
     """
     with open('config.json', 'r', encoding='utf-8') as config_file:
         return json.load(config_file)
+def po_token_verifier() -> Tuple[str, str]:
+    """
+    Verifies and returns YouTube visitor data and PO token.
+
+    Returns:
+        Tuple[str, str]: A tuple containing visitor data and PO token.
+    """
+    token_object = generate_youtube_token()
+    return token_object["visitorData"], token_object["poToken"]
+
+
+def generate_youtube_token() -> dict:
+    """
+    Generates a YouTube authentication token by executing a Node.js script.
+
+    Returns:
+        dict: A dictionary containing visitor data and PO token.
+    """
+    log_message("Generating YouTube token")
+    result = subprocess.run(
+        ["node", "youtube-token-generator.js"],
+        capture_output=True,
+        text=True,
+        check=True
+    )
+    data = json.loads(result.stdout)
+    log_message(f"Result: {data}")
+    return data
 
 def main():
     """ Main function"""
