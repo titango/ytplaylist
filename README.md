@@ -11,7 +11,8 @@ Python script to download a YouTube playlist and convert it to MP3.
 4. Edit the `config.json` file to specify your `DOWNLOAD_DIR`, `YOUTUBE_PLAYLIST`, and `FFMPEG_PATH` according to your system setup.
 
 # Usage
-Run `python main.py` after configuring the `config` file
+- As of Apr 25 2025, you need to run `pip install --force-reinstall --no-cache-dir git+https://github.com/felipeucelli/pytubefix.git@new-player` to install the latest version of pytubefix. (Credit: https://github.com/JuanBindez/pytubefix/issues/464)
+- Run `python main.py` after configuring the `config` file
 
 ![console](images/console.png)
 
