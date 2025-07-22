@@ -26,18 +26,17 @@ def check_duplicate_name(file_name, download_dir):
     Checks if a file with the same name already exists in the download directory.
 
     Parameters:
-    file_name (str): The name of the file being checked.
+    file_name (str): The name of the file being checked (e.g., 'abc.mp3').
     download_dir (str): The directory where files are downloaded.
 
     Returns:
     bool: True if a duplicate file name exists, False otherwise.
     """
-    file_name_without_extension = os.path.splitext(file_name)[0]
-    for existing_file_name in os.listdir(download_dir):
-        existing_file_name_without_extension = os.path.splitext(existing_file_name)[0]
-        if file_name_without_extension in existing_file_name_without_extension:
-            log_message(f'File <<{file_name}>> already exists, skipping.\n')
-            return True
+    file_path = os.path.join(download_dir, file_name.strip())
+    if os.path.isfile(file_path):
+        log_message(f'File <<{file_name}>> already exists, skipping.\n')
+        return True
+    log_message(f'No duplicate found for: {file_name}')
     return False
 
 def log_message(message):

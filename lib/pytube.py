@@ -1,4 +1,3 @@
-"""Deprecated: Please use yt_dlp.py instead for downloading YouTube videos and playlists."""
 import sys
 from tqdm import tqdm
 from pytubefix import YouTube, Playlist
@@ -8,8 +7,22 @@ from pytubefix.exceptions import VideoUnavailable
 from lib.file import sanitize_filename, check_duplicate_name, log_message, convert_to_mp3
 from lib.youtube_token import po_token_verifier
 
-def download_video_pytube(url, download_dir):
+def get_Youtube_name(url, download_dir):
     """
+    Checks if a YouTube video name already exists in the download directory.
+
+    Parameters:
+    url (str): The URL of the YouTube video.
+    download_dir (str): The directory where files are downloaded.
+
+    Returns:
+    bool: True if a duplicate file name exists, False otherwise.
+    """
+    yt = YouTube(url, use_po_token=True, po_token_verifier=po_token_verifier)
+    return yt
+
+def download_video_pytube(url, download_dir):
+    """ DEPRECATED:
     Downloads a video from a given URL and saves it to the specified directory.
 
     Parameters:
@@ -41,6 +54,8 @@ def download_video_pytube(url, download_dir):
         return None
       
 def download_playlist_pytube(download_dir, youtube_playlist, ffmpeg_path):
+    """DEPRECATED:
+    Downloads all videos in a YouTube playlist and converts them to MP3 format."""
     playlist = Playlist(youtube_playlist)
     for index, url in enumerate(playlist.video_urls, start=1):
         log_message(f'Processing video {index} of {len(playlist.video_urls)} ({url})')
@@ -49,7 +64,7 @@ def download_playlist_pytube(download_dir, youtube_playlist, ffmpeg_path):
             convert_to_mp3(output_file, download_dir, ffmpeg_path)
             
 def on_progress(stream, _chunk, bytes_remaining):
-    """
+    """ DEPRECATED:
     Updates the progress bar during a download operation.
 
     Parameters:

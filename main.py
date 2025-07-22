@@ -19,12 +19,12 @@ def main():
     config = load_config()
     download_dir = config['DOWNLOAD_DIR']
     youtube_playlist = config['YOUTUBE_PLAYLIST']
-    ffmpeg_path = config.get('FFMPEG_PATH', '/usr/bin/ffmpeg')  # Default path if not specified
+    # ffmpeg_path = config.get('FFMPEG_PATH', '/usr/bin/ffmpeg')  # Default path if not specified
 
     if not download_dir or not youtube_playlist:
         print("Download directory and YouTube playlist must be specified in the config.")
         return
-    download_playlist_yt_dlp(download_dir, youtube_playlist, ffmpeg_path)
+    download_playlist_yt_dlp(download_dir, youtube_playlist)
 
 if __name__ == "__main__":
     main()
