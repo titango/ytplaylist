@@ -1,15 +1,18 @@
 
-# Ytplaylist - Download and convert YouTube playlist to MP3 v0.2.1
+# Ytplaylist - Download and convert YouTube playlist to MP3 
+
 
 <img src="images/logo.png" width="250">
 
 Python script to download a YouTube playlist and convert it to MP3.
 
+Version: v0.2.1
+
 ---
 
 ## Shortcuts
 
-- [Ytplaylist - Download and convert YouTube playlist to MP3 v0.2.1](#ytplaylist---download-and-convert-youtube-playlist-to-mp3-v021)
+- [Ytplaylist - Download and convert YouTube playlist to MP3](#ytplaylist---download-and-convert-youtube-playlist-to-mp3)
   - [Shortcuts](#shortcuts)
   - [Quick Start](#quick-start)
   - [Installation](#installation)
@@ -27,7 +30,7 @@ Python script to download a YouTube playlist and convert it to MP3.
 
 ```sh
 git clone https://github.com/titango/ytplaylist.git
-cd ytplayer_downloader
+cd ytplaylist
 ./setup.sh
 # Edit config.json as needed
 python main.py
@@ -79,15 +82,9 @@ python main.py
 ## Requirements & Dependencies
 
 - Python 3.6 or higher
-- `ffmpeg` for converting videos to MP3 format
 - `yt-dlp` (for downloading videos)
 - `pytubefix` (for playlist parsing)
 - `tqdm` (for progress bar)
-
-Install dependencies:
-```sh
-pip install yt-dlp tqdm
-```
 
 ---
 
@@ -96,7 +93,6 @@ pip install yt-dlp tqdm
 - Make sure your YouTube playlist is set to public.
 - If you see `No module named 'yt_dlp'`, run `pip install yt-dlp`.
 - If you see permission errors, try running the script with elevated privileges or check your download directory permissions.
-- Ensure `ffmpeg` is installed and its path is correct in `config.json`.
 
 ---
 
