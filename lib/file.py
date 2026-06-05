@@ -1,4 +1,3 @@
-"""Utility functions for file operations"""
 import os
 import re
 from datetime import datetime
