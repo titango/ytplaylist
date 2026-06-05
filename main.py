@@ -3,6 +3,7 @@ import json
 from lib.yt_dlp import download_playlist_yt_dlp
 
 def load_config():
+
     """
     Loads the configuration settings from a JSON file.
 
@@ -15,8 +16,9 @@ def load_config():
 def main():
     """ Main function"""
     config = load_config()
-    download_dir = config.get('DOWNLOAD_DIR')
-    youtube_playlist = config.get('YOUTUBE_PLAYLIST')
+    download_dir = config['DOWNLOAD_DIR']
+    youtube_playlist = config['YOUTUBE_PLAYLIST']
+    # ffmpeg_path = config.get('FFMPEG_PATH', '/usr/bin/ffmpeg')  # Default path if not specified
 
     if not download_dir or not youtube_playlist:
         print("Download directory and YouTube playlist must be specified in the config.")

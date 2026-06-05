@@ -4,6 +4,7 @@ import re
 from datetime import datetime
 
 # Create a log directory if it doesn't exist
+IS_LOGGING = False
 LOG_DIR = './log'
 if not os.path.exists(LOG_DIR):
     os.makedirs(LOG_DIR)
@@ -17,7 +18,7 @@ def sanitize_filename(filename):
     Sanitize filename by removing or replacing characters that are not valid in file paths.
     """
     # Replace slashes with hyphens and remove other potentially problematic characters
-    return re.sub(r'[/\\:*?"<>|]', '-', filename).strip()
+    return re.sub(r'[/\\:*?"<>|]', '-', filename)
 
 def check_duplicate_name(file_name, download_dir):
     """
@@ -45,5 +46,6 @@ def log_message(message):
     message (str): The message to be logged.
     """
     print(message)
-    with open(LOG_FILE_PATH, 'a', encoding='utf-8') as log_file:
-        log_file.write(message + '\n')
+    if IS_LOGGING:
+        with open(LOG_FILE_PATH, 'a', encoding='utf-8') as log_file:
+            log_file.write(message + '\n')
