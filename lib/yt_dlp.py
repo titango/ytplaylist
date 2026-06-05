@@ -5,10 +5,6 @@ using yt-dlp only (no pytubefix required).
 
 import os
 import json
-# pylint: disable=import-self
-# This imports the third-party "yt_dlp" package, not the current
-# module "lib.yt_dlp" — pylint 4.x's name-matching heuristic flags
-# it as a self-import despite the different package paths.
 from yt_dlp import YoutubeDL
 from tqdm import tqdm
 
@@ -187,5 +183,3 @@ def download_video_yt_dlp(url, download_dir, title=None):
             f"Failed to download {url}: {e}"
         )
         return None
-    
-    
