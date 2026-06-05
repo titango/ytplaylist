@@ -58,7 +58,7 @@ python main.py
 ```json
 {
   "DOWNLOAD_DIR": "./downloads",
-  "YOUTUBE_PLAYLIST": "https://www.youtube.com/playlist?list=...",
+  "YOUTUBE_PLAYLIST": "https://www.youtube.com/playlist?list=..."
 }
 ```
 
@@ -82,8 +82,7 @@ python main.py
 ## Requirements & Dependencies
 
 - Python 3.6 or higher
-- `yt-dlp` (for downloading videos)
-- `pytubefix` (for playlist parsing)
+- `yt-dlp` (for downloading and parsing playlists)
 - `tqdm` (for progress bar)
 
 ---

@@ -1,7 +1,6 @@
 """Utility functions for file operations"""
 import os
 import re
-import subprocess
 from datetime import datetime
 
 # Create a log directory if it doesn't exist
@@ -50,32 +49,3 @@ def log_message(message):
     if IS_LOGGING:
         with open(LOG_FILE_PATH, 'a', encoding='utf-8') as log_file:
             log_file.write(message + '\n')
-            
-def convert_to_mp3(input_file, download_dir, ffmpeg_path):
-    """
-    Converts a downloaded video file to MP3 format using ffmpeg.
-
-    Parameters:
-    input_file (str): The path to the downloaded video file.
-    download_dir (str): The directory where the MP3 file will be saved.
-    ffmpeg_path (str): The path to the ffmpeg executable.
-
-    Returns:
-    None
-    """
-    base, _ = os.path.splitext(input_file)
-    mp3_file = base + '.mp3'
-    log_message('Converting to MP3 file.....')
-    downloaded_audio_file = os.path.join(download_dir, os.path.basename(input_file.strip()))
-
-    ffmpeg_command = [
-      ffmpeg_path,
-      "-y",  # Overwrite output file without asking
-      "-i", downloaded_audio_file,
-      "-codec:a", "libmp3lame",
-      "-b:a", "320k",  # Set audio bitrate to 320kbps
-      mp3_file
-    ]
-    subprocess.run(ffmpeg_command, stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT, check=True)
-    os.remove(downloaded_audio_file)
-    log_message(f'MP3 file converted to {mp3_file}\n')

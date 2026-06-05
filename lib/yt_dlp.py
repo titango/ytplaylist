@@ -113,7 +113,6 @@ def download_playlist_yt_dlp(download_dir, playlist_url):
             f"Failed to process playlist {playlist_url}: {e}"
         )
 
-
 def download_video_yt_dlp(url, download_dir, title=None):
     """
     Download a YouTube video's audio as MP3.
