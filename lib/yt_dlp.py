@@ -8,6 +8,12 @@ import json
 from yt_dlp import YoutubeDL
 from tqdm import tqdm
 
+from .file import (
+    sanitize_filename,
+    check_duplicate_name,
+    log_message,
+)
+
 # Use a dictionary to store the progress bar state.
 # This avoids the use of the 'global' keyword while maintaining shared state.
 pbar_state = {"pbar": None}
@@ -103,7 +109,8 @@ def download_playlist_yt_dlp(download_dir, playlist_url):
                 entry['title']
             )
 
-    except Exception as e:
+    except Exception as e:  # pylint: disable=broad-exception-caught
+        # Catch all exceptions so a single bad video doesn't abort the playlist.
         log_message(
             f"Failed to process playlist {playlist_url}: {e}"
         )
@@ -175,7 +182,8 @@ def download_video_yt_dlp(url, download_dir, title=None):
         )
         return None
 
-    except Exception as e:
+    except Exception as e:  # pylint: disable=broad-exception-caught
+        # Catch all exceptions so a single failed download doesn't abort the playlist.
         log_message(
             f"Failed to download {url}: {e}"
         )
