@@ -8,16 +8,14 @@ import json
 from yt_dlp import YoutubeDL
 from tqdm import tqdm
 
-from lib.file import (
-    sanitize_filename,
-    check_duplicate_name,
-    log_message,
-)
-
 # Use a dictionary to store the progress bar state.
 # This avoids the use of the 'global' keyword while maintaining shared state.
 pbar_state = {"pbar": None}
+
 def progress_bar_hook(d):
+    """
+    Update the progress bar based on download status.
+    """
     if d["status"] == "downloading":
         if pbar_state["pbar"] is None:
             total = (
@@ -54,7 +52,6 @@ def download_playlist_yt_dlp(download_dir, playlist_url):
     """
     Download every video in a playlist.
     """
-
     try:
         opts = {
             "proxy": "",
