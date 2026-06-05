@@ -3,7 +3,6 @@ import json
 from lib.yt_dlp import download_playlist_yt_dlp
 
 def load_config():
-
     """
     Loads the configuration settings from a JSON file.
 
@@ -15,6 +14,7 @@ def load_config():
 
 def main():
     """ Main function"""
+    print("Hey there! Let's get started with downloading your playlist.")
     config = load_config()
     download_dir = config['DOWNLOAD_DIR']
     youtube_playlist = config['YOUTUBE_PLAYLIST']
