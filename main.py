@@ -2,9 +2,8 @@
 import json
 from lib.yt_dlp import download_playlist_yt_dlp
 
-_version = "0.2.0"
 def load_config():
-    
+
     """
     Loads the configuration settings from a JSON file.
 
