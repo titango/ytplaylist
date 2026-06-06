@@ -4,7 +4,6 @@ using yt-dlp only (no pytubefix required).
 """
 
 import os
-import json
 from yt_dlp import YoutubeDL
 from tqdm import tqdm
 
@@ -63,6 +62,7 @@ def download_playlist_yt_dlp(download_dir, playlist_url):
             "proxy": "",
             "quiet": True,
             "no_warnings": True,
+            "ignoreerrors": True,
             "extractor_args": {
                 "youtubetab": {
                     "skip": ["authcheck"]
@@ -80,17 +80,25 @@ def download_playlist_yt_dlp(download_dir, playlist_url):
             )
 
         entries = playlist_info.get("entries", [])
-        # print(f"entries: {entries}")
-        json_str = json.dumps(entries, indent=4)
-        with open("sample.json", "w", encoding="utf-8") as f:
-            f.write(json_str)
 
         total = len(entries)
 
         for index, entry in enumerate(entries, start=1):
+            if entry is None:
+                log_message(
+                    f"Skipping video {index} of {total}: "
+                    f"unavailable (yt-dlp returned no entry)"
+                )
+                continue
+
             video_url = entry.get("url")
+            web_url = entry.get("webpage_url")
 
             if not video_url:
+                log_message(
+                    f"Skipping video {index} of {total}: "
+                    f"no URL found in entry"
+                )
                 continue
 
             if not video_url.startswith("http"):
@@ -100,7 +108,7 @@ def download_playlist_yt_dlp(download_dir, playlist_url):
 
             log_message(
                 f"\nProcessing video {index} of {total} "
-                f"({video_url})"
+                f"{web_url}"
             )
 
             download_video_yt_dlp(
@@ -140,7 +148,7 @@ def download_video_yt_dlp(url, download_dir, title=None):
 
         output_template = os.path.join(
             download_dir,
-            f"{title}.%(ext)s"
+            f"{video_title}.%(ext)s"
         )
 
         ydl_opts = {
@@ -148,6 +156,7 @@ def download_video_yt_dlp(url, download_dir, title=None):
             "outtmpl": output_template,
             "quiet": True,
             "no_warnings": True,
+            "ignoreerrors": True,
             "progress_hooks": [progress_bar_hook],
             "postprocessors": [
                 {

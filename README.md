@@ -6,7 +6,7 @@
 
 Python script to download a YouTube playlist and convert it to MP3.
 
-Version: v0.2.1
+Version: v0.3.0
 
 ---
 
@@ -76,6 +76,9 @@ python main.py
 - Downloads videos from a specified YouTube playlist.
 - Converts the downloaded videos to MP3 format.
 - Saves the MP3 files to the specified download directory.
+- Skips unavailable or deleted videos and continues downloading the rest of the playlist.
+- Logs every skipped video with a reason for easy troubleshooting.
+- Sanitizes video titles so characters like `/` are converted to `-` and never create unwanted subdirectories.
 
 ---
 
@@ -92,6 +95,7 @@ python main.py
 - Make sure your YouTube playlist is set to public.
 - If you see `No module named 'yt_dlp'`, run `pip install yt-dlp`.
 - If you see permission errors, try running the script with elevated privileges or check your download directory permissions.
+- If a video in your playlist is unavailable (e.g., the uploader's account was terminated, or the video was removed), it will be **skipped** and the rest of the playlist will continue downloading. Look for `Skipping video N of M: ...` lines in the log to see which entries were skipped and why.
 
 ---
 

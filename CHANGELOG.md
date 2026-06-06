@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.3.0] - 2026-06-06
+- Fixed a crash where a single unavailable video in a playlist (e.g., terminated account) would abort the whole download run. Unavailable videos are now skipped and the rest of the playlist continues.
+- Added logging for skipped videos, including the reason (`unavailable` / `no URL found in entry`).
+- Fixed a bug where video titles containing `/` (e.g., `AA/BB/CC`) were being interpreted as directory paths by `yt-dlp`'s output template, creating unwanted subdirectories. Slashes (and other path-unsafe characters) are now converted to `-` in the on-disk filename.
+
 ## [0.2.1] - 2025-07-22
 - Improved duplicate file detection logic for Unicode and edge cases
 - Enhanced progress bar display for downloads; progress now remains visible after completion
