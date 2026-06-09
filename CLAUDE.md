@@ -10,7 +10,6 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - **Test (single file)**: `pytest tests/test_file.py -v` — runs only file utility tests
 - **Test (single function)**: `pytest tests/test_yt_dlp.py::TestDownloadPlaylist::test_skips_none_entries -v`
 - **Smoke test**: `python test_yt.py` — quick connectivity test (fetches a single video's title via yt-dlp, requires network)
-- **Lint**: `pylint $(git ls-files '*.py')` — CI runs pylint on push to `main`/`develop`
 - **Setup**: `./setup.sh` — bootstraps pyenv 3.12 + venv + pip install
 - **Install deps**: `pip install -r requirements.txt`
 
