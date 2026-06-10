@@ -9,3 +9,5 @@ node_modules
 *$py.class
 **/.pyc
 .aider*
+config.json
+.plans

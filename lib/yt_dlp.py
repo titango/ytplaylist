@@ -17,6 +17,33 @@ from .file import (
 # This avoids the use of the 'global' keyword while maintaining shared state.
 pbar_state = {"pbar": None}
 
+
+def _make_gui_progress_hook(callback):
+    """
+    Create a yt-dlp progress hook that calls *callback(n, total)*.
+
+    Used by the GUI to receive progress updates without polluting the
+    module-level ``pbar_state`` or the ``tqdm``-based progress bar.
+    """
+    def hook(d):
+        if d["status"] == "downloading":
+            total = (
+                d.get("total_bytes")
+                or d.get("total_bytes_estimate")
+                or 0
+            )
+            downloaded = d.get("downloaded_bytes", 0)
+            callback(downloaded, total)
+        elif d["status"] == "finished":
+            total = (
+                d.get("total_bytes")
+                or d.get("total_bytes_estimate")
+                or 0
+            )
+            callback(total, total)
+    return hook
+
+
 def progress_bar_hook(d):
     """
     Update the progress bar based on download status.
@@ -53,9 +80,26 @@ def progress_bar_hook(d):
 
             pbar_state["pbar"] = None
 
-def download_playlist_yt_dlp(download_dir, playlist_url):
+
+def download_playlist_yt_dlp(
+    download_dir,
+    playlist_url,
+    progress_callback=None,
+    cancel_event=None,
+):
     """
     Download every video in a playlist.
+
+    Parameters
+    ----------
+    download_dir : str
+        Directory to save downloaded files.
+    playlist_url : str
+        URL of the YouTube playlist.
+    progress_callback : callable or None
+        Optional ``(n, total)`` callback for per-video progress (GUI mode).
+    cancel_event : threading.Event or None
+        When set, stops processing remaining videos after the current one.
     """
     try:
         opts = {
@@ -84,6 +128,13 @@ def download_playlist_yt_dlp(download_dir, playlist_url):
         total = len(entries)
 
         for index, entry in enumerate(entries, start=1):
+            if cancel_event and cancel_event.is_set():
+                log_message(
+                    "Download cancelled by user. "
+                    "All remaining videos have been skipped."
+                )
+                break
+
             if entry is None:
                 log_message(
                     f"Skipping video {index} of {total}: "
@@ -114,7 +165,9 @@ def download_playlist_yt_dlp(download_dir, playlist_url):
             download_video_yt_dlp(
                 video_url,
                 download_dir,
-                entry['title']
+                entry['title'],
+                progress_callback=progress_callback,
+                cancel_event=cancel_event,
             )
 
     except Exception as e:  # pylint: disable=broad-exception-caught
@@ -123,9 +176,24 @@ def download_playlist_yt_dlp(download_dir, playlist_url):
             f"Failed to process playlist {playlist_url}: {e}"
         )
 
-def download_video_yt_dlp(url, download_dir, title=None):
+
+def download_video_yt_dlp(url, download_dir, title=None, progress_callback=None, cancel_event=None):
     """
     Download a YouTube video's audio as MP3.
+
+    Parameters
+    ----------
+    url : str
+        The video URL to download.
+    download_dir : str
+        Directory to save the file.
+    title : str or None
+        Video title used for the filename.
+    progress_callback : callable or None
+        Optional ``(n, total)`` callback for per-video progress (GUI mode).
+        When provided, the module-level ``tqdm`` progress bar is skipped.
+    cancel_event : threading.Event or None
+        When set before the download starts, the download is skipped.
 
     Returns:
         str | None: Path to downloaded file.
@@ -146,10 +214,23 @@ def download_video_yt_dlp(url, download_dir, title=None):
             )
             return None
 
+        if cancel_event and cancel_event.is_set():
+            log_message(
+                "Download cancelled by user"
+            )
+            return None
+
         output_template = os.path.join(
             download_dir,
             f"{video_title}.%(ext)s"
         )
+
+        # Choose the progress hook based on whether a GUI callback is active.
+        # When no callback is provided, the default tqdm-based hook is used.
+        if progress_callback:
+            hooks = [_make_gui_progress_hook(progress_callback)]
+        else:
+            hooks = [progress_bar_hook]
 
         ydl_opts = {
             "format": "bestaudio/best",
@@ -157,7 +238,7 @@ def download_video_yt_dlp(url, download_dir, title=None):
             "quiet": True,
             "no_warnings": True,
             "ignoreerrors": True,
-            "progress_hooks": [progress_bar_hook],
+            "progress_hooks": hooks,
             "postprocessors": [
                 {
                     "key": "FFmpegExtractAudio",

@@ -155,7 +155,8 @@ class TestDownloadPlaylist:
 
                 assert mock_dl.call_count == 3
                 mock_dl.assert_any_call(
-                    "https://www.youtube.com/watch?v=a1", "/tmp/dl", "First Video"
+                    "https://www.youtube.com/watch?v=a1", "/tmp/dl", "First Video",
+                    progress_callback=None, cancel_event=None,
                 )
 
     def test_skips_none_entries(self):
@@ -198,7 +199,8 @@ class TestDownloadPlaylist:
                 download_playlist_yt_dlp("/tmp/dl", "https://example.com/pl")
 
                 mock_dl.assert_called_once_with(
-                    "https://www.youtube.com/watch?v=d4", "/tmp/dl", "Short URL"
+                    "https://www.youtube.com/watch?v=d4", "/tmp/dl", "Short URL",
+                    progress_callback=None, cancel_event=None,
                 )
 
     def test_catches_extract_info_exception(self):
