@@ -6,6 +6,7 @@ responsive during downloads.
 
 import json
 import os
+import re
 import threading
 from queue import Queue, Empty
 from tkinter import (
@@ -17,15 +18,17 @@ from tkinter import (
     messagebox,
 )
 
+from gui.worker import DownloadWorker
+
 # Shared config file at the project root (same file used by CLI).
 PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 CONFIG_PATH = os.path.join(PROJECT_ROOT, "config.json")
 
-from gui.worker import DownloadWorker  # noqa: E402 (path laid before import)
-
 
 class PlaylistDownloaderApp(Tk):
     """Main Tkinter window for the YouTube playlist downloader."""
+    # pylint: disable=too-many-instance-attributes
+    # A GUI window legitimately needs many widgets as instance attributes.
 
     # ------------------------------------------------------------------
     # Lifecycle
@@ -262,7 +265,7 @@ class PlaylistDownloaderApp(Tk):
         self.log_text.insert("end", text + "\n")
 
         # Cap at 1000 lines to prevent UI lag.
-        line_count = int(self.log_text.index("end-1c").split(".")[0])
+        line_count = int(self.log_text.index("end-1c").split(".", maxsplit=1)[0])
         if line_count > 1000:
             self.log_text.delete("1.0", f"{line_count - 1000}.0")
 
@@ -277,8 +280,6 @@ class PlaylistDownloaderApp(Tk):
 
     def _parse_video_counter(self, text: str):
         """Look for ``Processing video X of Y`` in *text* and update labels."""
-        import re  # noqa: re imported here to keep top-level minimal
-
         m = re.search(r"Processing video (\d+) of (\d+)", text)
         if m:
             idx, total = m.group(1), m.group(2)
