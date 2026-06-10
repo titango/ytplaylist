@@ -1,29 +1,9 @@
-"""Main file"""
-import json
-from lib.yt_dlp import download_playlist_yt_dlp
+"""Main file — backward-compatible wrapper.
 
-def load_config():
-    """
-    Loads the configuration settings from a JSON file.
-
-    Returns:
-    dict: The configuration settings.
-    """
-    with open('config.json', 'r', encoding='utf-8') as config_file:
-        return json.load(config_file)
-
-def main():
-    """ Main function"""
-    print("Hey there! Let's get started with downloading your playlist.")
-    config = load_config()
-    download_dir = config['DOWNLOAD_DIR']
-    youtube_playlist = config['YOUTUBE_PLAYLIST']
-    # ffmpeg_path = config.get('FFMPEG_PATH', '/usr/bin/ffmpeg')  # Default path if not specified
-
-    if not download_dir or not youtube_playlist:
-        print("Download directory and YouTube playlist must be specified in the config.")
-        return
-    download_playlist_yt_dlp(download_dir, youtube_playlist)
+Delegates to ``cli.main`` so ``python main.py`` still works after the
+CLI code was moved into its own package.
+"""
+from cli.main import main
 
 if __name__ == "__main__":
     main()
