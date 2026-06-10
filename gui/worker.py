@@ -28,6 +28,7 @@ class _TeeStream:
         self._buffer = ""
 
     def write(self, text: str):
+        """Write *text* to the original stream and forward complete lines to the queue."""
         # Forward to the original stream so terminal output is preserved.
         self._original.write(text)
         self._original.flush()
@@ -52,6 +53,7 @@ class _TeeStream:
                     self._queue.put((self._msg_type, stripped))
 
     def flush(self):
+        """Flush the original stream."""
         self._original.flush()
 
 
@@ -72,6 +74,8 @@ class DownloadWorker:
     ``("error", reason)``
         Download failed with an exception.
     """
+    # pylint: disable=too-few-public-methods
+    # A worker class is a single-purpose runner, not a utility bundle.
 
     def __init__(self, download_dir: str, playlist_url: str, queue: Queue,
                  cancel_event: threading.Event):
